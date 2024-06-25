@@ -131,7 +131,7 @@ function onSliderChange(value) {
     const barChartLabels = YEARS.slice(value, value + STEP);
 
     myChart.data.datasets[0].data = CLOSING_PRICES_SHOW;
-    myChart.data.datasets[1].data = CLOSING_PRICES_MINUS_SHOW;
+    myChart.data.datasets[3].data = CLOSING_PRICES_MINUS_SHOW;
     myChart.data.labels = barChartLabels;
 
     myChart.update();
