@@ -66,8 +66,8 @@ const config = {
             dragData: {
                 onDragStart: function (e, datasetIndex, index, value) {
                 }, onDrag: function (e, datasetIndex, index, value) {
-                }, onDragEnd: function (e, datasetIndex, index, value) {
                     updateSurroundingData(datasetIndex, index, value);
+                }, onDragEnd: function (e, datasetIndex, index, value) {
                 }
             }
         }
