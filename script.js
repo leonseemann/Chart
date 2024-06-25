@@ -11,7 +11,7 @@ const initialData = {
             borderWidth: 1,
             data: CLOSING_PRICES,
             yAxisID: "y",
-            pointHitRadius: 50
+            pointHitRadius: 30
         },
         {
             label: 'CLOSING_PRICES_MINUS',
