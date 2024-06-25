@@ -8,33 +8,38 @@ const initialData = {
     labels: YEARS, datasets: [
         {
             label: 'CLOSING_PRICES',
-            borderWidth: 1,
             data: CLOSING_PRICES,
             yAxisID: "y",
-            pointHitRadius: 30
+            pointRadius: 10,
+            pointStyle: "rect",
+            pointHitRadius: 30,
+            borderColor: "rgb(232,126,168)",
+        },
+        {
+            label: 'STRICH',
+            data: Array(YEARS.length).fill(900),
+            pointStyle: false,
+            dragData: false,
+            borderColor: "rgb(225,157,68)",
+            borderWidth: 5,
+        },
+        {
+            label: 'STRICH',
+            data: Array(YEARS.length).fill(600),
+            pointStyle: false,
+            dragData: false,
+            borderColor: "rgb(84,225,68)",
+            borderWidth: 5,
         },
         {
             label: 'CLOSING_PRICES_MINUS',
-            borderWidth: 1,
             fill: true,
             data: CLOSING_PRICES_MINUS,
             yAxisID: "y1",
             pointStyle: false,
-            dragData: false
-        },
-        {
-            label: 'STRICH',
-            borderWidth: 1,
-            data: Array(YEARS.length).fill(900),
-            pointStyle: false,
-            dragData: false
-        },
-        {
-            label: 'STRICH',
-            borderWidth: 1,
-            data: Array(YEARS.length).fill(600),
-            pointStyle: false,
             dragData: false,
+            borderColor: "rgba(0,0,0,1)",
+            backgroundColor: "rgb(33,113,183)"
         }
         ]
 };
@@ -45,21 +50,33 @@ const config = {
     data: initialData,
     options: {
         responsive: true,
+        animation: {
+            duration: 0 // general animation time
+        },
+        hover: {
+            animationDuration: 0 // duration of animations when hovering an item
+        },
+        responsiveAnimationDuration: 0, // animation duration after a resize
+        elements: {
+            line: {
+                tension: 0 // disables bezier curves
+            }
+        },
         scales: {
             y: {
                 type: 'linear',
                 display: true,
-                position: 'left'
-            },
-            y1: {
-                type: 'linear',
-                display: true,
-                position: 'right',
+                position: 'left',
 
                 grid: {
                     drawOnChartArea: false,
                     color: "#ff3f00",
                 }
+            },
+            y1: {
+                type: 'linear',
+                display: true,
+                position: 'right',
             }
         },
         plugins: {
@@ -80,19 +97,26 @@ const myChart = new Chart(document.getElementById('myChart'), config);
 // Function to update surrounding data
 function updateSurroundingData(datasetIndex, index, value) {
     console.log(datasetIndex);
-    const dataset = myChart.data.datasets[datasetIndex].data;
+
+    const datasetY = myChart.data.datasets[0].data;
+    const datasetY1 = myChart.data.datasets[3].data;
 
     if (index > 0) {
-        dataset[index - 1] = value - (value * 0.1); // Update previous data point
+        datasetY[index - 1] = datasetY[index] - (value * 0.1); // Update previous data point
+        datasetY1[index - 1] = datasetY1[index] - (value * 0.1); // Update previous data point
     }
 
-    if (index < dataset.length - 1) {
-        dataset[index + 1] = value - (value * 0.05); // Update next data point
+    if (index < datasetY.length - 1) {
+        datasetY[index + 1] = datasetY[index] - (value * 0.05); // Update next data point
+        datasetY1[index + 1] = datasetY1[index] - (value * 0.05); // Update next data point
+        datasetY1[index] = value - 300; // Update next data point
     }
 
-    let maxDataValue = Math.max(...dataset);
+    let maxDataValueY = Math.max(...datasetY);
+    let maxDataValueY1 = Math.max(...datasetY1);
      // Round up to the nearest 10
-    myChart.options.scales.y1.max = Math.ceil(maxDataValue / 10) * 10;
+    myChart.options.scales.y.max = Math.ceil(maxDataValueY / 10) * 10;
+    myChart.options.scales.y1.max = Math.ceil(maxDataValueY1 / 10) * 10;
 
     myChart.update();
 }
